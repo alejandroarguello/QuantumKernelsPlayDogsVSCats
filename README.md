@@ -1,6 +1,6 @@
 # QuantumKernelsPlayDogsVSCats 🐶🐱🔬
 
-**Final Thesis for the Computer Science degree of Alejandro Argüello Suárez. September 2022****
+**Final Thesis for the Computer Science degree of Alejandro Argüello Suárez. September 2022**
 QuantumKernelsPlayDogsVSCats is a web-based platform that allows users to train and deploy neural networks using various architectures—including classical transfer learning and quantum-enhanced models. The application supports training, prediction, and report generation, making it ideal for users interested in exploring both classical and quantum machine learning techniques.
 
 ![Application Screenshot](website/static/images/readme_image1.png)

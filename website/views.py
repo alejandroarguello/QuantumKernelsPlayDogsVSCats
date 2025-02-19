@@ -4,6 +4,7 @@ from threading import Thread
 from time import sleep
 from click import password_option
 from requests import session
+from .data_setup import download_and_extract_dataset, download_model_if_missing
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 # %pylab inline
@@ -340,69 +341,30 @@ class ExecuteTrainingTask:
         i=0
         while i < 1:
             try:
+                #Download dataset if necessary
                 os.chdir(directoryOriginalPath)
-
-                if (datasetTL == "Cat and Dog nº1"):
-                    datasetName = "tongpython/cat-and-dog"
-                    datasetZipName = "cat-and-dog.zip"
-                    linkDataset = "https://www.kaggle.com/datasets/tongpython/cat-and-dog"
-                    directoryZip = directoryOriginal + "/" + datasetZipName
-                elif (datasetTL == "Cat and Dog nº2"):
-                    datasetName = "d4rklucif3r/cat-and-dogs"
-                    datasetZipName = "cat-and-dogs.zip"
-                    linkDataset = "https://www.kaggle.com/datasets/d4rklucif3r/cat-and-dogs"
-                    directoryZip = directoryOriginal + "/" + datasetZipName
-                elif (datasetTL == "Cat and Dog nº3"):
-                    datasetName = "chetankv/dogs-cats-images"
-                    datasetZipName = "dogs-cats-images.zip"
-                    linkDataset = "https://www.kaggle.com/datasets/chetankv/dogs-cats-images"
-                    directoryZip = directoryOriginal + "/" + datasetZipName
+                training_dir, test_dir = download_and_extract_dataset(datasetTL, directoryOriginal)
                 
-
-                if not os.path.exists(directoryZip): #si no existe el .zip porque no se ha descargado anteriormente, se descarga
-                    os.system("kaggle datasets download " + datasetName) #COMANDO PARA DESCARGAR EL DATASET
-
-                dataDirectory = directoryOriginal + '/website/static/additional/data'
-                dataset1Path = dataDirectory + '/dataset1'
-                dataset2Path = dataDirectory + '/dataset2'
-                dataset3Path = dataDirectory + '/dataset3'
-                if not os.path.exists(dataDirectory):
-                    os.makedirs(dataDirectory)
-                if not os.path.exists(dataset1Path):
-                    os.makedirs(dataset1Path)
-                if not os.path.exists(dataset2Path):
-                    os.makedirs(dataset2Path)
-                if not os.path.exists(dataset3Path):
-                    os.makedirs(dataset3Path)
+                #Download predefined model weights if necessary
+                VGG16_MODEL_URL = "https://drive.google.com/file/d/1CxQH-CPjCBYCX9W0Wfp3sDUTBH9voDHS/view?usp=drive_link"
+                VGG16_MODEL_PATH = os.path.join("website", "static", "additional", "predictSectionModels", "VGG16_FullyRetrained_definitivo.pth")
+                download_model_if_missing(VGG16_MODEL_URL, VGG16_MODEL_PATH)
+                VGG16_LL_MODEL_URL = "https://drive.google.com/file/d/1x3UfwsUeT36UMQ0SgkoNcLFlbv2WKpIq/view?usp=drive_link"
+                VGG16__LL_MODEL_PATH = os.path.join("website", "static", "additional", "predictSectionModels", "VGG16_LastLayerRetrained_definitivo.pth")
+                download_model_if_missing(VGG16_LL_MODEL_URL, VGG16__LL_MODEL_PATH)
+                SVM_MODEL_URL = "https://drive.google.com/file/d/1VBNnlvCQ-P1_AB_JEL-lvctCtrIE_FsG/view?usp=drive_link"
+                SVM_MODEL_PATH = os.path.join("website", "static", "additional", "predictSectionModels", "SVM_definitivo.pth")
+                download_model_if_missing(SVM_MODEL_URL, SVM_MODEL_PATH)
+                VGG16_SVM__MODEL_URL = "https://drive.google.com/file/d/1KPbQE32kiLCA1xQc2oBk6KPr49kwVexh/view?usp=drive_link"
+                VGG16_SVM_MODEL_PATH = os.path.join("website", "static", "additional", "predictSectionModels", "VGG16_SVM_definitivo.pth")
+                download_model_if_missing(VGG16_SVM__MODEL_URL, VGG16_SVM_MODEL_PATH)
+                VGG16__QSVM_MODEL_URL = "https://drive.google.com/file/d/1L5zoufNnCUIt2-I0VFm1-2CoTorK1UcO/view?usp=drive_link"
+                VGG16__QSVM_MODEL_PATH = os.path.join("website", "static", "additional", "predictSectionModels", "VGG16_QSVM_definitivo.pth")
+                download_model_if_missing(VGG16__QSVM_MODEL_URL, VGG16__QSVM_MODEL_PATH)
+                VGG16_Var_MODEL_URL = "https://drive.google.com/file/d/1VfEzP-xV__ExNdtq5ryKSOIQH55y2Kee/view?usp=drive_link"
+                VGG16_Var_MODEL_PATH = os.path.join("website", "static", "additional", "predictSectionModels", "VGG16_VariationalQuantumCircuit_definitivo.pth")
+                download_model_if_missing(VGG16_Var_MODEL_URL, VGG16_Var_MODEL_PATH)
                 
-
-                if (datasetTL == "Cat and Dog nº1"):
-                    if not os.path.exists(dataset1Path + '/dataset'):
-                        os.makedirs(dataset1Path + '/dataset')
-                        #Descomprimir el zip con el dataset
-                        with zipfile.ZipFile(directoryZip, "r") as z:
-                            z.extractall(dataset1Path + '/dataset')
-                    training_dir = dataset1Path + "/dataset/training_set/training_set"
-                    test_dir = dataset1Path + "/dataset/test_set/test_set"
-                elif (datasetTL == "Cat and Dog nº2"):
-                    if not os.path.exists(dataset2Path + '/dataset'):
-                        #Descomprimir el zip con el dataset
-                        with zipfile.ZipFile(directoryZip, "r") as z:
-                            z.extractall(dataset2Path + '/dataset')
-                    training_dir = dataset2Path + "/dataset/dataset/training_set"
-                    test_dir = dataset2Path + "/dataset/dataset/test_set"
-                elif (datasetTL == "Cat and Dog nº3"):
-                    if not os.path.exists(dataset3Path + '/dataset'):
-                        #Descomprimir el zip con el dataset
-                        with zipfile.ZipFile(directoryZip, "r") as z:
-                            z.extractall(dataset3Path + '/dataset')
-                    training_dir = dataset3Path + "/dataset/dataset/training_set"
-                    test_dir = dataset3Path + "/dataset/dataset/test_set"
-
-                print(os.listdir(dataDirectory))
-                classes = os.listdir(training_dir)
-                print(classes)
-
 
                 if svmTL == 'YES':
 

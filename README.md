@@ -8,8 +8,6 @@ QuantumKernelsPlayDogsVSCats is a web-based platform that allows users to train 
 
 ## Features 🚀
 
-## Features 🚀
-
 - **Hybrid Quantum-Classical Architectures:**  
   Train models using a mix of traditional deep neural networks (e.g., VGG, ResNet) and quantum-enhanced circuits. This hybrid approach leverages quantum computing techniques alongside classical architectures to potentially boost performance on challenging tasks.
 
@@ -28,7 +26,7 @@ QuantumKernelsPlayDogsVSCats is a web-based platform that allows users to train 
 - **External Model Weights:**  
   Pre-trained model weights are automatically downloaded from Google Drive if they are missing, ensuring that the latest weights are available without bloating the repository.
 
-  
+
 ## Prerequisites ⚙️
 
 - Python 3.10 or higher
@@ -82,11 +80,6 @@ QuantumKernelsPlayDogsVSCats is a web-based platform that allows users to train 
    •	In the History section, review previously saved models and generated PDF reports.
    •	Use the provided options to delete records if necessary.
 
-## Example 🎯
-Try asking a question like:
-
-	“Explain how backpropagation works in neural networks.”
-Or upload an image containing technical diagrams or code snippets to receive a detailed analysis.
 
 ## Configuration 🔧
 

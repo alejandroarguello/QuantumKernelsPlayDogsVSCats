@@ -1,0 +1,387 @@
+{% extends "baseViews.html" %} {% block title %}Predictor{% endblock %} <!-- Extiende el base-html. Será exactamente igual excepto el título-->
+{% block links %}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{{ dropzone.load_css() }} <!-- para el dropzone -->
+<style> 
+  .dropzone {
+      border: 2px dashed #FA7C0D;
+      margin-left: 10%;
+      margin-right: 10%;
+      min-height: 200px;
+  }
+</style><!-- para el dropzone -->
+{% endblock %}
+{% block content %}
+<p>&emsp;</p>
+<h1 align="left"><b>PREDICTOR</b></h1>
+<p>&emsp;</p>
+<p>
+  In this section you will have the opportunity to predict whether an image is a dog or a cat based on different models!
+</p>
+<p>
+  Dataset used in the predefined models:
+</p>
+<p>
+  <a href="https://www.kaggle.com/datasets/tongpython/cat-and-dog">https://www.kaggle.com/datasets/tongpython/cat-and-dog</a>
+</p>
+<hr>
+<p>&emsp;</p>
+
+<div class="card text-center">
+  <div class="card-body" style="background-color: #e6e6e6;">
+    <div align="center">
+      <p>&emsp;</p>
+      <h3 align="center">Which model do you want to use?</h3>
+      <p>&ensp;</p>
+      <form method="POST">
+        <select id="selectBox" name="selectBox" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValue('predictor')">
+          <option selected value="predefinedModels">Predefined models</option>
+          <option value="myModels">My models</option>
+        </select>
+        <!-- <h4 align="left">Predefined models</h4> -->
+        <p>&ensp;</p>
+        <div class="container" id="containerRadioButtonsPredefinedModels" style="display:block;">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="inlineRadio1" value="VGG16 Fully Retrained" checked>
+            <label class="form-check-label" for="inlineRadio1"><b>VGG16 Fully Retrained</b></label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="inlineRadio2" value="VGG16 Last Layer Retrained">
+            <label class="form-check-label" for="inlineRadio2"><b>VGG16 Last Layer Retrained</b></label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="inlineRadio3" value="SVM">
+            <label class="form-check-label" for="inlineRadio3"><b>SVM</b></label>
+          </div>
+          <br>
+          <br>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="inlineRadio4" value="VGG16 + SVM">
+            <label class="form-check-label" for="inlineRadio3"><b>VGG16 + SVM</b></label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="inlineRadio5" value="VGG16 + Quantum Kernel">
+            <label class="form-check-label" for="inlineRadio3"><b>VGG16 + Quantum Kernel</b></label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="inlineRadio6" value="VGG16 + Variational Quantum Circuit">
+            <label class="form-check-label" for="inlineRadio3"><b>VGG16 + Variational Quantum Circuit</b></label>
+          </div>
+        </div> 
+
+        <div class="container" id="containerRadioButtonsMyModels" style="display:none;"> <!-- empiezan ocultos pues la opcion por defecto es Predefined models -->
+          {% if existsModelsSaved == True %}
+            {% for model in modelsSaved %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="RadioOptionsPredefinedModels" id="{{ model }}" value="{{ model }}" checked>
+                <label class="form-check-label" for="{{ model }}"><b>{{ model }}</b></label>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div id="NoModelsSavedWarning" class="alert alert-danger alter-dismissable fade show" role="alert">
+              You do not have any models saved. You will have to use a predefined model.
+            </div>
+          {% endif %}
+        </div>
+        
+
+        <p>&ensp;</p>
+        <div class="text-lg-start mt-4 pt-2">
+          <button id="botonesPredictPage" name="botonesPredictPage" value="botonUseThisModel" type="submit" class="btn btn-primary" onclick="showLoadingModelMessage()">Use this model</button> <!-- btn-primary son clases de BOOTSTRAP -->
+        </div>
+      </form>
+      <p>&emsp;</p>
+      <div id="loadingModelMessage" style="display: none;">
+        <p><b>LOADING MODEL</b></p>
+        <div class="spinner-border">
+          <span class="visually-hidden"></span>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+  
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+
+  {% if buttonUseThisModel == True %}
+  
+  <div align="center">
+    <hr>
+    <h4><b>{{ modelChosen }}</b></h4>
+    <p>&emsp;</p>
+    
+    {% if (modelChosen == 'VGG16 Fully Retrained') %}
+
+    <p>This model uses the VGG16 neural network. The classifier of this neural network is modified so that it classifies 2 classes instead of the initial 1000. Unlike the model called "VGG16 Last Layer Retrained", in this case the neural network is trained completely, from the first to the last layer. The weights of the VGG16 network pre-trained with imagenet are not used and must be recalculated with our own training dataset. This allows a high specialization for our binary classification problem between cats and dogs as even the most general features will be obtained from images of one of these two classes. By having to train the whole network the amount of resources and time spent is less than for the "VGG16 Las Layer Retrained" model.
+    </p>
+    <br>
+    <img src="{{ url_for('static', filename='images/imagen_VGG16_FullyRetrained.png')}}" class="img-fluid" id="imagen_VGG16_FullyRetrained" style="width: 70%;">
+    <p>&ensp;</p>
+    <p>This model has been created with the following parameters:</p>
+    <p><b>Optimizer</b> = SGD</p>
+    <p><b>Number of epochs</b> = 30</p>
+    <p><b>Learning rate</b> = 0.0001</p>
+    <br>
+    <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+    <div class="alert alert-primary" role="alert" style="width: 200px;">
+        0.93
+    </div>
+    <p>&emsp;</p>
+
+    {% elif (modelChosen == 'VGG16 Last Layer Retrained') %}
+
+    <p>This model uses the VGG16 neural network. The classifier of this neural network is modified so that it classifies 2 classes instead of the initial 1000. Unlike the model called "VGG16 Fully Retrained", in this case only the last layers, corresponding to the classifier, are trained. This technique is called Feature Extraction because it extracts and takes advantage of the features of the initial layers of VGG16 pre-trained with imagenet. These features correspond to more general characteristics such as lines or edges, while the features of the lower layers of the network correspond to more specific features such as eyes, faces, ears, etc... In this way we take advantage of the pre-trained VGG16 network and adapt it to our problem, so that it classifies 2 classes, cats and dogs. By not having to train the complete network we will also save time and training resources.
+    </p>
+    <br>
+    <img src="{{ url_for('static', filename='images/imagen_VGG16_LastLayerRetrained.png')}}" class="img-fluid" id="imagen_VGG16_LastLayerRetrained" style="width: 70%;">
+    <p>&ensp;</p>
+    <p>This model has been created with the following parameters:</p>
+    <p>Optimizer = SGD</p>
+    <p>Number of epochs = 30</p>
+    <p>Learning rate = 0.0001</p>
+    <br>
+    <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+    <div class="alert alert-primary" role="alert" style="width: 200px;">
+        0.93
+    </div>
+    <p>&emsp;</p>
+
+    {% elif (modelChosen == 'SVM') %}
+
+    <p>This model uses only <b>Support Vector Machines (SVM)</b>. These methods are properly related to classification and regression problems. Given a set of training examples (of samples) we can label the classes and train an SVM to build a model that predicts the class of a new sample. Intuitively, an SVM is a model that represents the sample points in space, separating the classes to 2 spaces as wide as possible by a separation hyperplane defined as the vector between the 2 points, of the 2 classes, closest to which is called support vector.
+    </p>
+    <br>
+    <img src="{{ url_for('static', filename='images/imagen_SVM.png')}}" class="img-fluid" id="imagen_SVM" style="width: 50%;">
+    <p>&ensp;</p>
+    <p>This SVM model has been created with the following parameters:</p>
+    <p>C = 0.5</p>
+    <p>kernel = 'poly'</p>
+    <p>gamma = 'auto'</p>
+    <br>
+    <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+    <div class="alert alert-primary" role="alert" style="width: 200px;">
+        0.6
+    </div>
+    <p>&emsp;</p>
+
+
+    {% elif (modelChosen == 'VGG16 + SVM') %}
+
+    <p>This model uses a pretrained <b>VGG16</b> neural network and <b>Support Vector Machines (SVM)</b>. In this model, the VGG16 neural network pre-trained with the imagenet dataset has been used to extract the features from the images. This technique is known as feature extraction and consists of collecting the features of the images in the layer prior to the classifier. In this way, these features can be provided as input to the classifier, in this case an svm, which will perform the binary classification between dogs and cats.
+    </p>
+
+    <br>
+    <img src="{{ url_for('static', filename='images/imagen_VGG16_SVM.png')}}" class="img-fluid" id="imagen_VGG16_SVM" style="width: 70%;">
+    <p>&ensp;</p>
+    <p>This SVM model has been trained with the following parameters:</p>
+    <p>C = 0.5</p>
+    <p>kernel = 'poly'</p>
+    <p>gamma = 'auto'</p>
+    <br>
+    <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+    <div class="alert alert-primary" role="alert" style="width: 200px;">
+        0.96
+    </div>
+    <p>&emsp;</p>
+
+
+    {% elif (modelChosen == 'VGG16 + Quantum Kernel') %}
+
+    <p>This hybrid classical-quantum model has been trained based on quantum kernels. It consists of taking a pre-trained neural network, in this case VGG16, which has been trained on the Imagenet dataset.
+      After modifying this network to obtain 4 features at its output, these are used as input to a standard support vector machine with a kernel computed by a quantum circuit.
+    </p>
+    <br>
+    <img src="{{ url_for('static', filename='images/imagen_VGG16_QSVM.png')}}" class="img-fluid" id="imagen_VGG16_QSVM" style="width: 70%;">
+    <p>&ensp;</p>
+    <p>This model has been created with the following parameters:</p>
+    <p>Number of qubits = 4</p>
+    <p>kernel  = kernel_matrix</p>
+    <br>
+    <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+    <div class="alert alert-primary" role="alert" style="width: 200px;">
+      0.6
+    </div>
+    <p>&emsp;</p>
+
+
+    {% elif (modelChosen == 'VGG16 + Variational Quantum Circuit') %}
+
+    <p>In this model a technique called classical-to-quantum transfer learning has been applied. It consists of taking a pre-trained neural network, in this case VGG16, which has been trained on the Imagenet dataset.
+      After replacing its last linear layer, which performed a classification into 1000 classes from 4096 features, we obtain a preprocessing block that maps any high resolution image into 4096 features. These features are classified by a "Dressed Quantum Circuit" of 4 qubits. Then the hybrid model is trained by keeping the Variational Quantum Circuit constant.
+    </p>
+    <br>
+    <img src="{{ url_for('static', filename='images/imagen_VGG16_VariationalQuantumCircuit.png')}}" class="img-fluid" id="imagen_VGG16_VariationalQuantumCircuit" style="width: 70%;">
+    <p>&ensp;</p>
+    <p>This model has been created with the following parameters:</p>
+    <p>Number of qubits = 4</p>
+    <p>Step = 0.0004</p>
+    <p>Batch size = 4</p>
+    <p>Number of epochs = 1</p>
+    <p>Depth of the quantum circuit (number of variational layers) = 6</p>
+    <p>gamma_lr_scheduler (Learning rate reduction applied every 10 epochs) = 0.1</p>
+    <p>q_delta (Initial spread of random quantum weights) = 0.01</p>
+    <br>
+    <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+    <div class="alert alert-primary" role="alert" style="width: 200px;">
+        0.99
+    </div>
+    <p>&emsp;</p>
+      <hr>
+      <h4><b>MODEL GRAPHS</b></h4>
+      <p>&emsp;</p>
+      <div class="row">
+        <div class="col">
+          <img src="{{ url_for('static', filename='images/graphAccuracy.png')}}" class="img-fluid" id="graph_accuracy">
+        </div>
+        <div class="col">
+          <img src="{{ url_for('static', filename='images/graphLosses.png')}}" class="img-fluid" id="graph_losses">
+        </div>
+      </div>
+      <p>&emsp;</p>
+      <p>&emsp;</p>
+    <p>&emsp;</p>
+
+
+    {% else %}
+
+      {% if (tipo == 'normal') %}
+
+        <p>This model has been created with the following parameters:</p>
+        <p><b>Dataset</b> = {{datasetTL_loaded}}</p>
+        <p><b>Model for Transfer Learning</b> = {{modelTL_loaded}}</p>
+        <p><b>Pretrained</b> = {{pretrainedTL_loaded}}</p>
+        <p><b>SVM as las layer</b> = NO</p>
+        <p><b>Optimizer</b> = {{optimizerTL_loaded}}</p>
+        <p><b>Size of validation set</b> = {{validationSet_size_loaded}}</p>
+        <p><b>Learning rate</b> = {{lr_loaded}}</p>
+        <p><b>Batch size</b> = {{batch_size_loaded}}</p>
+        <br>
+        <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+        <div class="alert alert-primary" role="alert" style="width: 200px;">
+            {{test_accuracy_loaded}}
+        </div>
+
+      {% elif (tipo == 'svm') %}
+
+        <p>This model has been created with the following parameters:</p>
+        <p><b>Dataset</b> = {{datasetTL_loaded}}</p>
+        <p><b>Model for Transfer Learning</b> = {{modelTL_loaded}}</p>
+        <p><b>SVM as las layer</b> = YES</p>
+        <p><b>Size of validation set</b> = {{validationSet_size_loaded}}</p>
+        <p><b>C (Regularization)</b> = {{c_loaded}}</p>
+        <p><b>Kernel</b> = {{kernel_loaded}}</p>
+        {% if kernel_loaded != 'linear' %}
+          <p><b>Gamma</b> = {{gamma_loaded}}</p>
+        {% endif %}
+        <br>
+        <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+        <div class="alert alert-primary" role="alert" style="width: 200px;">
+            {{test_accuracy_loaded}}
+        </div>
+      {% else %}
+
+        <p>This model has been created in the following way:</p>
+        {% if (typeQuantum == 'VariationalQuantumCircuit') %}
+          <p><b>Type of Quantum Model</b> = VGG16 + Variaitonal Quantum Circuit</p>
+        {% else %}
+          <p><b>Type of Quantum Model</b> = VGG16 + Quantum Kernel</p>
+        {% endif %}
+
+        <p><b>Dataset</b> = {{datasetTL_loaded}}</p>
+        <br>
+        <p>When evaluating the model on the test dataset we obtained the following <b>accuracy</b>:</p>
+        <div class="alert alert-primary" role="alert" style="width: 200px;">
+            {{test_accuracy_loaded}}
+        </div>
+
+      {% endif %}
+    
+    {% if (typeQuantum == 'VariationalQuantumCircuit') %}
+      <p>&emsp;</p>
+      <hr>
+      <h4><b>MODEL GRAPHS</b></h4>
+      <p>&emsp;</p>
+      <div class="row">
+        <div class="col">
+          <img src="{{ url_for('static', filename='images/graphAccuracy.png')}}" class="img-fluid" id="graph_accuracy">
+        </div>
+        <div class="col">
+          <img src="{{ url_for('static', filename='images/graphLosses.png')}}" class="img-fluid" id="graph_losses">
+        </div>
+      </div>
+      <p>&emsp;</p>
+      <p>&emsp;</p>
+    {% endif %}
+      
+    {% endif %}
+    <p>&emsp;</p>
+    {% if (tipo == 'normal') %}
+      <hr>
+      <h4><b>MODEL GRAPHS</b></h4>
+      <p>&emsp;</p>
+      <div class="row">
+        <div class="col">
+          <img src="{{ url_for('static', filename='images/graphAccuracy.png')}}" class="img-fluid" id="graph_accuracy">
+        </div>
+        <div class="col">
+          <img src="{{ url_for('static', filename='images/graphLosses.png')}}" class="img-fluid" id="graph_losses">
+        </div>
+      </div>
+      <p>&emsp;</p>
+      <p>&emsp;</p>
+    {% endif %}
+    <hr>
+    <h4><b>IMAGE PREDICTION</b></h4>
+    <p>&emsp;</p>
+    {{ dropzone.create(action='views.upload_dropzone') }}
+    {{ dropzone.config(max_files=1, max_file_size=20, timeout=30000, default_message='Click here or drop the image you want to predict!', 
+     upload_multiple=false, custom_options='addRemoveLinks: true, autoProcessQueue: true') }}
+    
+    <form method="POST">
+      <div class="text-lg-start mt-4 pt-2">
+        <button id="botonesPredictPage" name="botonesPredictPage" value="botonPredictImage" type="submit" class="btn btn-primary">Predict</button> <!-- btn-primary son clases de BOOTSTRAP -->
+      </div>
+    </form>
+  </div>
+
+  {% if buttonPredict == True %}
+  <div align="center">
+    <p>&emsp;</p>
+    <p>&emsp;</p>
+    <hr>
+    <p>&ensp;</p>
+    <div class="row">
+      <div class="column" style="width: 50%;">
+        <img src="{{ url_for('static', filename='images/predictionImage.jpg')}}" class="img-fluid" id="predictionImage" style="width: 50%;">
+      </div>
+      <div class="column" style="width: 50%;">
+        <p><b>Class predicted:</b></p>
+        <p>{{ classPredicted }}</p>
+        <p>&ensp;</p>
+        <p><b>Probability of being a cat:</b></p>
+        <div class="alert alert-primary" role="alert" style="width: 200px;">
+            {{ catProbability }} %
+        </div>
+        <p>&ensp;</p>
+        <p><b>Probability of being a dog:</b></p>
+        <div class="alert alert-primary" role="alert" style="width: 200px;">
+            {{ dogProbability }} %
+        </div>
+      </div>
+    </div>
+    <p>&ensp;</p>
+  </div>
+  {% endif %}
+</div>
+  {% endif %}
+
+
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+
+  {{ dropzone.load_js() }}
+{% endblock %}

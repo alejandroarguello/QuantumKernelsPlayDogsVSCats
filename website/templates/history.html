@@ -1,0 +1,147 @@
+{% extends "baseViews.html" %} {% block title %}History{% endblock %} <!-- Extiende el base-html. Será exactamente igual excepto el título-->
+{% block links %}
+<style>
+  
+  /* Create two unequal columns that floats next to each other */
+  .column {
+    float: left;
+    
+  }
+  
+  .left {
+    width: 90%;
+    align-items: center;
+  }
+  
+  .right {
+    width: 10%;
+  }
+  
+  </style>
+{% endblock %}
+{% block content %}
+  <p>&emsp;</p>
+  <h1 align="left"><b>TRAINING HISTORY</b></h1>
+  <p>&emsp;</p>
+  <p>
+    In this section you can consult the trainings you have done in the past!
+  </p>
+  <hr>
+
+  <p>&ensp;</p>
+    
+  <div class="row">
+    <div class="col-sm-6">
+      <button id="historyButtons" type="submit" name="historyButtons" value="pdfReportsButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right" onclick="changeHistory('PDFreports')">
+        PDF Reports
+      </button>
+    </div>
+    <div class="col-sm-6">
+      <button id="historyButtons" type="submit" name="historyButtons" value="modelsSavedButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right" onclick="changeHistory('modelsSaved')">
+        Models Saved
+      </button>
+    </div>
+  </div>
+  <hr>
+
+  <div id="containerReportsPDF" style="display: block;">
+  {% if existsPdfReports == true %}
+    {% for namePdf in namesPdfs %}
+    <div id="accordion">
+      <div class="card">
+        <div class="card-header" id="{{namePdf}}Heading">
+          <h5 class="mb-0">
+            <div class="row">
+              <div class="column left" width="">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#{{namePdf}}Collapse" aria-expanded="false" aria-controls="{{namePdf}}Collapse" style="color: #FA7C0D; width: 100%;">
+                  {{namePdf}}
+                </button>
+              </div>
+              <div class="column right">
+                <form method="POST">
+                  <button id="DeleteButton" type="submit" name="DeleteButton" value="{{namePdf}}" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+          </h5>
+        </div>
+    
+        <div id="{{namePdf}}Collapse" class="collapse" aria-labelledby="{{namePdf}}Heading" data-parent="#accordion">
+          <div class="card-body">
+            {% for urlPdf in urlsPdfs %}
+            {% if urlPdf==namePdf%}
+              {% set url = urlsPdfs[urlPdf] %}
+              <iframe
+                type="application/pdf"
+                src="{{url}}#toolbar=0"
+                height="{{namesPdfs[namePdf]}}"
+                width="100%"
+              ></iframe>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div id="NoPdfsSavedWarning" class="alert alert-danger alter-dismissable fade show" role="alert">
+      You do not have any previous training records. Select the "Generate a PDF report" option when training your models so that you can consult it here later.
+    </div>
+  {% endif %}
+  </div>
+
+
+  <div id="containerModelsSaved" style="display: none;">
+  {% if existsModelsSaved == true %}
+    {% for modelSaved in listaModelsSaved %}
+    <div id="accordion">
+      <div class="card">
+        <div class="card-header" id="{{modelSaved.name}}Heading">
+          <h5 class="mb-0">
+            <div class="row">
+              <div class="column left" width="">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#{{modelSaved.name}}Collapse" aria-expanded="false" aria-controls="{{modelSaved.name}}Collapse" style="color: #FA7C0D; width: 100%;">
+                  {{modelSaved.name}}
+                </button>
+              </div>
+              <div class="column right">
+                <form method="POST">
+                  <button id="DeleteButton" type="submit" name="DeleteButton" value="{{modelSaved.name}}" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+          </h5>
+        </div>
+    
+        <div id="{{modelSaved.name}}Collapse" class="collapse" aria-labelledby="{{modelSaved.name}}Heading" data-parent="#accordion">
+          <div class="card-body">
+            <p><b>File name:</b> {{modelSaved.name}}</p>
+            <p><b>Creation date:</b> {{modelSaved.date}}</p>
+            <p><b>Test accuracy obtained:</b> {{modelSaved.test_accuracy}}</p>
+            <p><b>Test loss obtained:</b> {{modelSaved.test_loss}}</p>
+            <p><b>Associated PDF report:</b> {{modelSaved.reportPDFassociated}}</p>
+            <p><b>File path:</b> {{modelSaved.path}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div id="NoPdfsSavedWarning" class="alert alert-danger alter-dismissable fade show" role="alert">
+      You do not have any model saved. Select the "Save the model" option when training your models so that you can consult it here later.
+    </div>
+  {% endif %}
+  </div>
+
+
+
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+  
+
+{% endblock %}

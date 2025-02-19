@@ -1,0 +1,291 @@
+{% extends "baseViews.html" %} {% block title %}Admin Settings{% endblock %} <!-- Extiende el base-html. Será exactamente igual excepto el título-->
+{% block content %}
+  <p>&emsp;</p>
+  <h1 align="left"><b>ADMIN SETTINGS</b></h1>
+  <hr>
+  <p>&emsp;</p>
+
+  <h5 align="center"><b>LIST OF USERS</b></h5>
+  <p>&ensp;</p>
+
+  <form method="POST">
+    <div align="center">
+      <select id="selectBoxAdminSettings" name="selectBoxAdminSettings" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+      {% if existsUsers == True %}
+        {% for username in listaUsernames %}
+          {% if username != 'admin' %}
+            {% if username == userChosen.username %}
+              <option selected value="{{ username }}">{{ username }}</option>
+            {% else %}
+              <option value="{{ username }}">{{ username }}</option>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      </select>
+    </div>
+
+    <p>&ensp;</p>
+    {% if existsUsers == True %}
+    <div class="row">
+      <div class="col-sm-3">
+        <button id="adminSettingsButton" type="submit" name="adminSettingsButton" value="createUserButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+          Create new user
+        </button>
+      </div>
+      <div class="col-sm-3">
+        <button id="adminSettingsButton" type="submit" name="adminSettingsButton" value="viewUserButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+          View user info
+        </button>
+      </div>
+      <div class="col-sm-3">
+        <button id="adminSettingsButton" type="submit" name="adminSettingsButton" value="modifyUserButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+          Modify user
+        </button>
+      </div>
+      <div class="col-sm-3">
+        <button id="adminSettingsButton" type="submit" name="adminSettingsButton" value="deleteUserButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+          Delete user
+        </button>
+      </div>
+    </div>
+      
+    {% else %}
+      <div id="NoUsersWarning" class="alert alert-danger alter-dismissable fade show" role="alert" align="center">
+        There are no more users than the administrator.
+      </div>
+    {% endif %}
+    
+    <hr>
+          
+  <p>&ensp;</p>
+
+  {% if flagBotonCreateNewUser == True %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+        <h4 align="center"><b>CREATE NEW USER</b></h4>
+        <p>&ensp;</p>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Full Name</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="text" class="form-control" value="" name="fullnameCreate" id="fullnameCreate">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Email</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="email" class="form-control" value="" name="emailCreate" id="emailCreate">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">User name</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="text" class="form-control" value="" name="usernameCreate" id="usernameCreate">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Password</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="password" class="form-control" name="password1Create" id="password1Create">
+          </div>
+        </div>
+        <p>&ensp;</p>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Repeat password</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="password" class="form-control" name="password2Create" id="password2Create">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-12">
+            
+              <button id="createUserAdminButton" type="submit" name="adminSettingsButton" value="createUserAdminButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+                Create user
+              </button>
+            
+          </div>
+        </div>
+    </div>
+  </div>
+
+  {% elif flagBotonViewUserInfo == True %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4 align="center"><b>VIEW USER INFO</b></h4>
+      <p>&ensp;</p>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Full Name</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{ userChosen.fullname }}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Email</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{ userChosen.email}}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">User name</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{ userChosen.username}}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">User ID</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{ userChosen.id}}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Number of models saved</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{ userChosen.numModelsSaved}}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Number of pdf reports saved</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{ userChosen.numTrainingsHistory}}
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+
+  {% elif flagBotonModifyUser == True %}
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4 align="center"><b>MODIFY USER</b></h4>
+        <p>&ensp;</p>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Full Name</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="text" class="form-control" value="{{ userChosen.fullname }}" name="fullname" id="fullname">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Email</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="email" class="form-control" value="{{ userChosen.email }}" name="email" id="email">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">User name</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="text" class="form-control" value="{{ userChosen.username }}" name="username" id="username">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Password</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="password" class="form-control" name="password1" id="password1">
+          </div>
+        </div>
+        <p>&ensp;</p>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Repeat password</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            <input type="password" class="form-control" name="password2" id="password2">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-12">
+            
+              <button id="modifyUserAdminButton" type="submit" name="adminSettingsButton" value="modifyUserAdminButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+                Save changes
+              </button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% elif flagBotonDeleteUser == True %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4 align="center"><b>DELETE USER</b></h4>
+      <p>&ensp;</p>
+      <hr>
+      <h5 class="mb-0" align="center">Are you sure you want to delete this user?</h5>
+      <p>&ensp;</p>
+      <h6 class="mb-0" align="center">{{ userChosen.username }}</h6>
+      <p>&ensp;</p>
+      <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+          <button id="cancelDeleteAdminButton" type="submit" name="adminSettingsButton" value="cancelDeleteAdminButton" class="btn btn-secondary btn-md" style="color: #ffffff; width: 100%;" align="right">
+            Cancel
+          </button>
+        </div>
+        
+        <div class="col-sm-3 text-secondary">
+          <button id="deleteUserAdminButton" type="submit" name="adminSettingsButton" value="deleteUserAdminButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+            Delete
+          </button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  {% endif %}
+  </form>
+
+  <p>&ensp;</p>
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+
+{% endblock %}

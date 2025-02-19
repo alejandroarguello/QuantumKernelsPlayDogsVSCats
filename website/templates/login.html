@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- que el tamaño se ajuste al tamaño de la pantalla -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/style.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    /> <!-- Estos links permiten usar estilos bootstrap sin descargarlos de verdad -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/baseViews.css') }}"
+    />
+
+    <!-- <title>{% block title %}Home{% endblock %}</title>  Los blocks podrán ser cambiados por otra de las templates, pues sobreescribirán esta template -->
+  </head>
+  <body>
+    
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e6e6e6;"> <!-- Esto son clases de Bootstrap -->
+      <button
+        id="navbarCollapsedButton"
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+      > <!-- Permite expandir el navbar si no entra, por ejemplo en pantalla de movil -->
+        <span id="navbarCollapsedIcon" class="navbar-toggler-icon"></span> <!-- Es el icono de la navbar -->
+      </button>
+      <div class="collapse navbar-collapse" id="navbar">
+          <ul class="navbar-nav">
+            <a id="QKPDVSC" class="navbar-brand" href="/login">QKPDVSC</a>
+          </ul>
+      </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %} {% if category ==
+      'error' %}
+      <div class="alert alert-danger alter-dismissable fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <div class="alert alert-success alter-dismissable fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %} {% endfor %} {% endif %} {% endwith %}
+
+    <section class="vh-100">
+      <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center col-md-9 col-lg-6 col-xl-5">
+            <img src="{{ url_for('static', filename='images/logoAPP2.PNG')}}"
+              class="img-fluid" alt="Logo image" style="width: 55%; height: 55%;" >
+          </div>
+          <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+              <form method="POST">
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form3Example3">Email address</label>
+                  <input type="email" id="email" name="email" class="form-control form-control-lg"
+                    placeholder="email address" />
+                </div>
+      
+                
+                <div class="form-outline mb-3">
+                  <label class="form-label" for="form3Example4">Password</label>
+                  <input type="password" id="password" name="password" class="form-control form-control-lg"
+                    placeholder="password" />
+                </div>
+      
+                <div class="d-flex flex-column justify-content-between align-items-center">
+                  <a href="{{ url_for('auth.forgot_password') }}" class="link-danger">Forgot password?</a>
+                </div>
+      
+                <div class="text-center text-lg-start mt-4 pt-2">
+                  <button type="submit" name="loginButton" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+                  <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="{{ url_for('auth.sign_up') }}" class="link-danger">Register</a></p>
+                </div>
+      
+              </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='index.js') }}"
+    ></script> <!-- Así es como se carga una imagen o archivo del folder static. Los 2 paréntesis indican que dentro habrá codigo python-->
+  </body>
+</html>

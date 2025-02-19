@@ -1,0 +1,116 @@
+select{
+    font-size: 20px;
+    font-weight: 500;
+    width: 300px;
+    color: #000000;
+    padding: 0.2rem 0.5rem;
+    margin: 0 1rem 0 0;
+    border-color: #FA7C0D;
+  }
+
+option { 
+    background-color: #ffffff; 
+}
+
+option:hover{
+    background-color: #FA7C0D; 
+}
+
+#navbarCollapsedButton:hover{
+    border-color: #FA7C0D;
+}
+
+#QKPDVSC{
+    color: #FA7C0D;
+}
+
+#home:hover {
+    color: #FA7C0D;
+}
+#homeLogo:hover{
+    color: #FA7C0D;
+}
+
+#predictor:hover {
+    color: #FA7C0D;
+}
+#predictorLogo:hover{
+    color: #FA7C0D;
+}
+
+#trainer:hover {
+    color: #FA7C0D;
+}
+#trainerLogo:hover{
+    color: #FA7C0D;
+}
+
+#history:hover {
+    color: #FA7C0D;
+}
+#historyLogo:hover{
+    color: #FA7C0D;
+}
+
+#admin:hover {
+    color: #FA7C0D;
+}
+#adminLogo:hover{
+    color: #FA7C0D;
+}
+
+#profile:hover {
+    color: #FA7C0D;
+}
+#profileLogo:hover{
+    color: #FA7C0D;
+}
+
+
+#logout:hover {
+    color: #FA7C0D;
+}
+
+hr{
+    background-color:#FA7C0D;
+}
+
+
+.column {
+    float: center;
+}
+  
+.left {
+    width: 25%;
+}
+  
+.right {
+    width: 75%;
+}
+
+.custom-control-input:checked{
+    background-color: #FA7C0D;
+    color: #FA7C0D;
+}
+
+.custom-range::-webkit-slider-thumb {
+    background: #FA7C0D;
+  }
+  
+  .custom-range::-moz-range-thumb {
+    background: #FA7C0D;
+  }
+  
+  .custom-range::-ms-thumb {
+    background: #FA7C0D;
+  }
+
+
+
+
+
+
+
+
+
+

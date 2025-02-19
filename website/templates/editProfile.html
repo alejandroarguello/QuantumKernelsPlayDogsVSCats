@@ -1,0 +1,158 @@
+{% extends "baseViews.html" %} {% block title %}Edit profile{% endblock %} <!-- Extiende el base-html. Será exactamente igual excepto el título-->
+{% block content %}
+  <p>&emsp;</p>
+  <h1 align="left"><b>PROFILE</b></h1>
+  <hr>
+  <p>&emsp;</p>
+  <div class="container">
+    <div class="main-body">
+    
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card" style=" height: 36em;">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                    <div class="mt-3">
+                      <h4>{{user.username}}</h4>
+                      {% if user.username == 'admin' %}
+                        <p class="text-secondary mb-1">Administrator</p>
+                      {% else %}
+                      <p class="text-secondary mb-1">Ordinary User</p>
+                      {% endif %}
+                      <p class="text-secondary mb-1">User ID: {{ user.id }}</p>
+                      <p>&ensp;</p>
+                    </div>
+                    <div class="card text-center" style="border-radius: 50%; height: 4em; width: 7em;">
+                      <div class="card-body" style="background-color: #8ad383; border-radius: 10%;">
+                        <h6>Logged</h6>
+                      </div>
+                    </div>
+                    <p>&emsp;</p>
+                    <p>&emsp;</p>
+                    <p>&emsp;</p>
+                    <form method="post">
+                      <button id="editProfileButtons" type="submit" name="editProfileButtons" value="buttonDeleteAccount" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+                        Delete account
+                      </button>
+                    </form>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <form method="POST">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Full Name</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user.fullname }}" name="fullname" id="fullname">
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Email</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <input type="email" class="form-control" value="{{ user.email }}" name="email" id="email">
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">User name</h6>
+                      </div>
+                      {% if user.username == 'admin' %}
+                        <div class="col-sm-9 text-secondary">
+                          <p>admin</p>
+                          </p><b style="color: #e06666;"> It is not possible to change admin user name.</b></p>
+                        </div>
+                      {% else %}
+                        <div class="col-sm-9 text-secondary">
+                          <input type="text" class="form-control" value="{{ user.username }}" name="username" id="username">
+                        </div>
+                      {% endif %}
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Password</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <input type="password" class="form-control" name="password1" id="password1">
+                      </div>
+                    </div>
+                    <p>&ensp;</p>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Repeat password</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <input type="password" class="form-control" name="password2" id="password2">
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        
+                          <button id="editProfileButtons" type="submit" name="editProfileButtons" value="saveProfileButton" class="btn btn-primary btn-md" style="color: #ffffff; width: 100%;" align="right">
+                            Save changes
+                          </button>
+                        
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="row gutters-sm text-center">
+                <div class="col-sm-6 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 style="color: #FA7C0D; padding-bottom: 0.5em;"><b>Number of models saved</b></h6>
+                      <h3>{{ user.numModelsSaved }}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 style="color: #FA7C0D; padding-bottom: 0.5em;"><b>Number of pdf reports saved</b></h6>
+                      <h3>{{ user.numTrainingsHistory }}</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+    <p>&emsp;</p>
+    <p>&emsp;</p>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

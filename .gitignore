@@ -1,0 +1,66 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment folders and files
+.env
+venv/
+env/
+ENV/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# macOS specific files
+.DS_Store
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Log files
+*.log
+
+# Database files (SQLite, etc.)
+*.sqlite3
+*.db
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Pytest cache
+.cache/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Visual Studio Code workspace files
+*.code-workspace
+
+# Dataset archives and large dataset directories
+website/static/additional/data/
+website/static/additional/dataParaPruebas/
+cat-and-dog.zip
+cat-and-dogs.zip
+dogs-cats-images.zip
+*.tar.gz
+*.zip
+
+# Model weight files (e.g., PyTorch .pth files)
+*.pth
+
+# Numpy binary files
+*.npy
+
+# Documentation (if not needed in the repo)
+docs/
+
+# Any other large or temporary files you don't wish to track
+# Example: temporary Altair chart cache
+alt.RepeatChart(...).npy

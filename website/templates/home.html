@@ -1,0 +1,74 @@
+{% extends "baseViews.html" %} {% block title %}Home{% endblock %} <!-- Extiende el base-html. Será exactamente igual excepto el título-->
+{% block content %}
+  <p>&emsp;</p>
+  <h1 align="left"><b>HOME</b></h1>
+  <hr>
+  <p>&emsp;</p>
+  <h2 align="left">QUANTUM KERNELS PLAY DOGS VS CATS</h2>
+  <p>&ensp;</p>
+  <p>
+    This app has been developed to support the QuantumKernelsPlayDogsVSCats project.
+  </p>
+  <p>
+    Among its functionalities are:
+  </p>
+  <p>
+    <ul>
+      <li>Performing classification of dog or cat images entered by the user. For this prediction a model based on convolutional neural networks will be used with different variants such as Transfer Learning with Feature Extraction, Support Vector Machines, Quantum Kernels or Variational Quantum Circuits.</li>
+      <li>Training of a model applying Transfer Learning in which the user can choose the different parameters to be used for training.</li>
+      <li>Consult a history with the details of the models already trained and previous trainings.</li>
+  </ul>
+  </p>
+  <p>&ensp;</p>
+  <div class="row">
+    <div class="column">
+      <img src="https://images.unsplash.com/photo-1617112513579-d8755a2c4693?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" alt="img1" style="width: 200px;">
+    </div>
+    <div class="column" style="width: 100px;">
+    </div>
+    <div class="column">
+      <img src="https://static.streamlit.io/examples/dog.jpg" alt="img2" style="width: 200px;">
+    </div>
+    <div class="column" style="width: 100px;">
+    </div>
+    <div class="column">
+      <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" alt="img3" style="width: 200px;">
+    </div>
+    <div class="column" style="width: 100px;">
+    </div>
+    <div class="column">
+      <img src="https://images.unsplash.com/photo-1575859431774-2e57ed632664?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" alt="img4" style="width: 200px;">
+    </div>
+  </div>
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+
+
+
+
+
+
+
+
+
+    <!--
+    <h1 align="center">Notes</h1>
+    <ul class="list-group list-group-flush" id="notes">
+      {% for note in user.notes %}
+      <li class="list-group-item">
+        {{ note.data }}
+        <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    <form method="POST">
+      <textarea name="note" id="note" class="form-control"></textarea>
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Note</button>
+      </div>
+    </form> -->
+{% endblock %}
+

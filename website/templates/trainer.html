@@ -1,0 +1,635 @@
+{% extends "baseViews.html" %} {% block title %}Trainer{% endblock %} <!-- Extiende el base-html. Será exactamente igual excepto el título-->
+{% block links %}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/baseViews.css') }}"
+    /> <!-- Este es un css propio creado por mi -->
+{% endblock %}
+{% block content %}
+  <p>&emsp;</p>
+  <h1 align="left"><b>TRAINER</b></h1>
+  <p>&emsp;</p>
+  <p>
+    In this section you will have the opportunity to train different models according to the parameters of your choice.
+  </p>
+  <p>
+    You can get more information about the selected dataset in this link:
+  </p>
+  
+  <div id="containerLinkDataset1" style="display:block;">
+    <a href="https://www.kaggle.com/datasets/tongpython/cat-and-dog">https://www.kaggle.com/datasets/tongpython/cat-and-dog</a>
+  </div>
+
+  <div id="containerLinkDataset2" style="display:none;">
+    <a href="https://www.kaggle.com/datasets/d4rklucif3r/cat-and-dogs">https://www.kaggle.com/datasets/d4rklucif3r/cat-and-dogs</a>
+  </div>
+
+  <div id="containerLinkDataset3" style="display:none;">
+    <a href="https://www.kaggle.com/datasets/chetankv/dogs-cats-images">https://www.kaggle.com/datasets/chetankv/dogs-cats-images</a>
+  </div>
+  
+  <hr>
+  <p>&ensp;</p>
+
+  <form method="POST">
+    <div class="card text-center">
+      <div class="card-body" style="background-color: #e6e6e6;">
+        <h3 align="center"><b>OPTIONS</b></h3>
+        <p>&ensp;</p>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em;">
+                <div class="card-body">
+                  <h6 align="center">Dataset</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxDataset" name="selectBoxDataset" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValueDatasetTrainer()">
+                    <option selected value="Cat and Dog nº1">Cat and Dog nº1</option>
+                    <option value="Cat and Dog nº2">Cat and Dog nº2</option>
+                    <option value="Cat and Dog nº3">Cat and Dog nº3</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-sm-1">
+            </div>
+  
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em;">
+                <div class="card-body">
+                  <h6 align="center">Work with</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxWorkWith" name="selectBoxWorkWith" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option selected value="CPU">CPU</option>
+                    <option value="GPU">GPU</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-sm-1">
+            </div>
+  
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em; height: 10em;">
+                <div class="card-body" id="cardMode">
+                  <h6 align="center">Mode</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxMode" name="selectBoxMode" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValue('trainerMode')" style="display: block;">
+                    <option selected value="Classical">Classical</option>
+                    <option value="Quantum">Quantum</option>
+                  </select>
+                  <div id="disabledMode" style="display: none;">
+                    <p style="color: #74e066;"><b>Must be classical when using SVM as last layer.</b></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+
+        <p>&ensp;</p>
+
+        <div class="container" id="containerClassical" style="display: block;">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em;">
+                <div class="card-body">
+                  <h6 align="center">Model for Transfer Learning</h6>
+                  <p>&ensp;</p>
+                  
+                    <div id="option1ModelsTL" style="display: block;">
+                      <select id="selectBoxModelTL" name="selectBoxModelTL" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected value="VGG16">VGG16</option>
+                        <option value="VGG19">VGG19</option>
+                        <option value="ResNet18">ResNet18</option>
+                        <option value="ResNet50">ResNet50</option>
+                        <option value="MobileNetV2">MobileNetV2</option>
+                        <option value="AlexNet">AlexNet</option>
+                        <option value="GoogLeNet">GoogLeNet</option>
+                        <option value="Inception v3">Inception v3</option>
+                        <option value="SqueezeNet 1_0">SqueezeNet 1_0</option>
+                        <option value="DenseNet 121">DenseNet 121</option>
+                      </select>
+                    </div>
+                    <div id="option2ModelsTL" style="display: none;">
+                      <select id="selectBoxModelTL" name="selectBoxModelTL" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected value="VGG16">VGG16</option>
+                        <option value="VGG19">VGG19</option>
+                        <option value="ResNet50">ResNet50</option>
+                        <option value="MobileNetV2">MobileNetV2</option>
+                        <option value="Inception v3">Inception v3</option>
+                        <option value="DenseNet 121">DenseNet 121</option>
+                      </select>
+                    </div>
+                
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-1">
+            </div>
+
+
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em; height: 10em;">
+                <div class="card-body" id="cardPretrained">
+                  <h6 align="center">Import the model as pretrained?</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxPretrained" name="selectBoxPretrained" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option selected value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                  <div id="disabledPretrained" style="display: none;">
+                    <p style="color: #74e066;"><b>Must be pretrained when using SVM as last layer.</b></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-1">
+            </div>
+
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em;">
+                <div class="card-body">
+                  <h6 align="center">Use SVM as the last layer?</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxSVM" name="selectBoxSVM" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValue('trainerSVmLastLayer')">
+                    <option selected value="NO">NO</option>
+                    <option value="YES">YES</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+          <div id="ocultarCuandoSVM" style="display: block;">
+            <p>&ensp;</p>
+            <h5 align="center"><b>User Input Hyperparameters</b></h5>
+            <p>&ensp;</p>
+
+            <div class="row align-items-center">
+              <div class="col-sm-2">
+              </div>
+
+              <div class="col-sm-3">
+                <div class="card" style=" width: 21em;">
+                  <div class="card-body">
+                    <h6 align="center">Optimizer</h6>
+                    <p>&ensp;</p>
+                    <select id="selectBoxOptimizer" name="selectBoxOptimizer" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                      <option selected value="SGD">SGD</option>
+                      <option value="Adam">Adam</option>
+                      <option value="Adadelta">Adadelta</option>
+                      <option value="Adagrad">Adagrad</option>
+                      <option value="AdamW">AdamW</option>
+                      <option value="NAdam">NAdam</option>
+                      <option value="RAdam">RAdam</option>
+                      <option value="Rprop">Rprop</option>
+                      <option value="ASGD">ASGD</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-sm-1">
+              </div>
+
+              <div class="col-sm-5 text-center">
+                <div class="card" style=" width: 28em;">
+                  <div class="card-body">
+                    <h6 align="center">Size of the validation set with respect to the training set</h6>
+                    <p>&ensp;</p>
+                    <select id="selectBoxValidationSize" name="selectBoxValidationSize" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                      <option selected value="10%">10%</option>
+                      <option value="15%">15%</option>
+                      <option value="20%">20%</option>
+                      <option value="25%">25%</option>
+                      <option value="30%">30%</option>
+                      <option value="30%">35%</option>
+                      <option value="40%">40%</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p>&ensp;</p>
+
+            <div class="row align-items-center">
+
+              <div class="col-sm-3">
+                <div class="card" style=" width: 21em;">
+                  <div class="card-body">
+                    <h6 align="center">Learning rate</h6>
+                    <p>&ensp;</p>
+                    <!--
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="RadioOptionsMyModels" id="lr1" value="lr1">
+                      <label class="form-check-label" for="lr1"><b>0.1</b></label>
+                      <input class="form-check-input" type="radio" name="RadioOptionsMyModels" id="lr2" value="lr2" checked>
+                      <label class="form-check-label" for="lr2"><b>0.01</b></label>
+                      <input class="form-check-input" type="radio" name="RadioOptionsMyModels" id="lr3" value="lr3">
+                      <label class="form-check-label" for="lr3"><b>0.001</b></label>
+                      <input class="form-check-input" type="radio" name="RadioOptionsMyModels" id="lr4" value="lr4">
+                      <label class="form-check-label" for="lr4"><b>0.0001</b></label>
+                    </div> -->
+                    <select id="selectBoxLR" name="selectBoxLR" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                      <option value="1">1</option>
+                      <option value="0.1">0.1</option>
+                      <option selected value="0.01">0.01</option>
+                      <option value="0.001">0.001</option>
+                      <option value="0.0001">0.0001</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-sm-1">
+              </div>
+
+              <div class="col-sm-3 text-center">
+                <div class="card" style=" width: 21em;">
+                  <div class="card-body">
+                    <h6 align="center">Number of epochs</h6>
+                    <p>&ensp;</p>
+                    <div class="row text-center">
+                      <div class="col-sm-1">
+                      </div>
+                      <div class="col-sm-0.5">
+                        <p style="padding-right: 0.5em;">0 </p>
+                      </div>
+                      <div class="col-sm-0.5 align-items-center">
+                        <input type="range" class="custom-range" min="1" max="200" step="1"  value="100" id="rangeNumEpochs" name="rangeNumEpochs" style="width: 14em; color: #FA7C0D;" oninput="amount.value=rangeNumEpochs.value"/>
+                        <!-- Es el slider del num epochs -->
+                      </div>
+                      <div class="col-sm-0.5">
+                        <p style="padding-left: 0.5em;"> 200</p>
+                      </div>
+                    </div>
+                        <input  align="center" id="amount" name="amount" for="rangeNumEpochs" value="100" style="font-size: 20px;
+                        font-weight: 500;
+                        width: 100px;
+                        color: #000000;
+                        padding: 0.2rem 0.5rem;
+                        border-color: #FA7C0D;
+                        border-width: 0.05em;
+                        text-align: center;" oninput="rangeNumEpochs.value=amount.value"></input> <!-- Es el valor del slider -->
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-1">
+              </div>
+
+              <div class="col-sm-2">
+                <div class="card" style=" width: 21em; height: 10em;">
+                  <div class="card-body">
+                    <h6 align="center">Batch Size</h6>
+                    <p>&ensp;</p>
+                    <input align="center" type="number" id="batchSize" name="batchSize" min="2" max="256" value="32" step="2" style="font-size: 20px;
+                    font-weight: 500;
+                    width: 100px;
+                    color: #000000;
+                    padding: 0.2rem 0.5rem;
+                    
+                    border-color: #FA7C0D;
+                    border-width: 0.05em;">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+            <p>&ensp;</p>
+            <p>&ensp;</p>
+            <h5 align="center"><b>Additional options</b></h5>
+            <p>&ensp;</p>
+
+            
+            <div class="row">
+              <div class="col-sm-3">
+              </div>
+
+              <div class="col-sm-3">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="saveModelClassical" name="saveModelClassical">
+                  <label class="custom-control-label" for="saveModelClassical"><b>Save the model</b></label>
+                </div>
+              </div>
+
+              
+
+              <div class="col-sm-3">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="generatePDFClassical" name="generatePDFClassical">
+                  <label class="custom-control-label" for="generatePDFClassical"><b>Generate PDF report</b></label>
+                </div>
+              </div>
+              
+            </div>
+            <p>&ensp;</p>
+            <div class="text-lg-start mt-4 pt-2">
+              <button type="submit" class="btn btn-primary">Train model</button> <!-- btn-primary son clases de BOOTSTRAP -->
+            </div>
+
+          </div><!-- fin del div ocultarCuandoSVM-->
+
+
+          
+        </div>
+         
+        
+        <div class="container" id="containerQuantum" style="display: none;"> <!-- CONTAINER QUANTUM OPTION-->
+          <div class="row">
+            <div class="column" style="width: 25%;">
+
+            </div>
+            <div class="column" style="width: 50%;">
+              <div class="card">
+                <div class="card-body">
+                  <h6 align="center">Type of quantum model</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxTypeQuantum" name="selectBoxTypeQuantum" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValue('typeQuantum')">
+                    <option selected value="VGG16 + Quantum Kernel">VGG16 + Quantum Kernel</option>
+                    <option value="VGG16 + Variational Quantum Circuit">VGG16 + Variational Quantum Circuit</option>
+                  </select>
+                  <p>&ensp;</p>
+                  <div id="linkQuantumKernels" style="display: block;">
+                    <p>You can find more information about Quantum Kernels in the following link:</p>
+                    <a href="https://pennylane.ai/qml/demos/tutorial_kernels_module.html">Explanation of Quantum Kernels</a>
+                  </div>
+                  <div id="linkVariationalQuantumCircuits" style="display: none;">
+                    <p>You can find more information about Variational Quantum Circuits in the following link:</p>
+                    <a href="https://medium.com/predict/classification-using-vqc-with-custom-variational-ansatz-c7c45fb699a1">Explanation of Variational Quantum Circuits</a>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="column" style="width: 25%;">
+
+            </div>
+          </div>
+
+          <p>&ensp;</p>
+          <p>&ensp;</p>
+          <h5 align="center"><b>Additional options</b></h5>
+          <p>&ensp;</p>
+
+          <div class="row">
+            <div class="col-sm-3">
+            </div>
+
+            <div class="col-sm-3">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="saveModelQuantum" name="saveModelQuantum">
+                <label class="custom-control-label" for="saveModelQuantum"><b>Save the model</b></label>
+              </div>
+            </div>
+
+            
+
+            <div class="col-sm-3">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="generatePDFQuantum" name="generatePDFQuantum">
+                <label class="custom-control-label" for="generatePDFQuantum"><b>Generate PDF report</b></label>
+              </div>
+            </div>
+            
+          </div>
+          <p>&ensp;</p>
+          <div class="text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary">Train model</button> <!-- btn-primary son clases de BOOTSTRAP -->
+          </div>
+          
+        </div>
+
+
+
+        
+        <div class="container" id="containerSVMchosen" style="display: none;"> <!-- CONTAINER SVM PARAMETERS-->
+          <p>&ensp;</p>
+          <h5 align="center"><b>SVM parameters</b></h5>
+          <p>&ensp;</p>
+
+
+          <div class="row align-items-center">
+            <div class="col-sm-2">
+            </div>
+
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em;">
+                <div class="card-body" id="cardMode">
+                  <h6 align="center">Shuffle dataset when splitting it</h6>
+                  <p>&ensp;</p>
+                  <select id="shuffleSVM" name="shuffleSVM" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValue('trainerMode')" style="display: block;">
+                    <option selected value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-1">
+            </div>
+
+            <div class="col-sm-5 text-center">
+              <div class="card" style=" width: 28em;">
+                <div class="card-body">
+                  <h6 align="center">Size of the validation set with respect to the training set</h6>
+                  <p>&ensp;</p>
+                  <select id="selectBoxValidationSize" name="selectBoxValidationSize" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option selected value="10%">10%</option>
+                    <option value="15%">15%</option>
+                    <option value="20%">20%</option>
+                    <option value="25%">25%</option>
+                    <option value="30%">30%</option>
+                    <option value="30%">35%</option>
+                    <option value="40%">40%</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <p>&ensp;</p>
+
+
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em; height: 10em;">
+                <div class="card-body">
+                  <h6 align="center">C (Regularization)</h6>
+                  <p>&ensp;</p>
+                  <select id="cRegularizationSVM" name="cRegularizationSVM" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="display: block;">
+                    <option value="0.001">0.001</option>
+                    <option value="0.01">0.01</option>
+                    <option value="0.1">0.1</option>
+                    <option value="1">1</option>
+                    <option value="10">10</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-sm-1">
+            </div>
+  
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em;">
+                <div class="card-body">
+                  <h6 align="center">Kernel</h6>
+                  <p>&ensp;</p>
+                  <select id="selectKernelSVM" name="selectKernelSVM" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" onchange="getSelectValue('typeKernel')">
+                    <option selected value="poly">Poly</option>
+                    <option value="linear">Linear</option>
+                    <option value="rbf">Rbf</option>
+                    <option value="sigmoid">Sigmoid</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-sm-1">
+            </div>
+  
+            <div class="col-sm-3">
+              <div class="card" style=" width: 21em; height: 10em;">
+                <div class="card-body" id="cardMode">
+                  <h6 align="center">Gamma</h6>
+                  <p>&ensp;</p>
+                  <select id="selectGammaSVM" name="selectGammaSVM" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="display: block;">
+                    <option selected value="auto">Auto</option>
+                    <option value="scale">Scale</option>
+                    <option value="0.001">0.001</option>
+                    <option value="0.01">0.01</option>
+                    <option value="0.1">0.1</option>
+                    <option value="1">1</option>
+                    <option value="10">10</option>
+                    <option value="100">100</option>
+                  </select>
+                  <div id="disabledGamma" style="display: none;">
+                    <p style="color: #e06666;"><b>Not available for linear kernel.</b></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div>
+
+          <p>&ensp;</p>
+
+          
+
+          
+          <div class="row" align="center">
+            <div class="column" style="width: 20%;">
+            </div>
+
+            <div class="column">
+              <div class="card" style=" width: 40em; height: 7em;">
+                <div class="card-body">
+                  <div id="linkSVMparameters">
+                    <p>You can find more information about SVM parameters in the following link:</p>
+                    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">Explanation of SVM parameters</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="column" style="width: 10%;">
+            </div>
+          </div>
+          
+
+          <p>&ensp;</p>
+          <p>&ensp;</p>
+          <h5 align="center"><b>Additional options</b></h5>
+          <p>&ensp;</p>
+
+          <div class="row">
+            <div class="col-sm-3">
+            </div>
+
+            <div class="col-sm-3">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="saveModelSVM" name="saveModelSVM">
+                <label class="custom-control-label" for="saveModelSVM"><b>Save the model</b></label>
+              </div>
+            </div>
+
+            
+
+            <div class="col-sm-3">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="generatePDFSVM" name="generatePDFSVM">
+                <label class="custom-control-label" for="generatePDFSVM"><b>Generate PDF report</b></label>
+              </div>
+            </div>
+            
+          </div>
+          <p>&ensp;</p>
+          <div class="text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary">Train model</button> <!-- btn-primary son clases de BOOTSTRAP -->
+          </div>
+        </div>
+
+
+        
+
+
+
+        
+
+      </div>
+    </div>
+  </form>
+
+
+  <!--
+  <script>
+
+    $(function(){
+      window.setInterval(function(){
+        update_flag_function()
+      }, 1000)
+    
+
+    function update_flag_function(){
+      $.ajax({
+        url:"/update_flag",
+        type: "POST",
+        dataType: "json",
+        success: function(data){
+          $(updateFlag).replaceWith(data)
+        }
+      });
+    }
+    });
+
+  </script>
+  -->
+
+
+
+  <p>&ensp;</p>
+  <p>&emsp;</p>
+  <p>&emsp;</p>
+
+
+{% endblock %}
